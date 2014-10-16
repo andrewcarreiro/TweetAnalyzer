@@ -1,0 +1,11 @@
+{
+  "name": "tweetanalyzer",
+  "version": "0.0.1",
+  "description": "Twitter Analytics and Scraper for NodeJS",
+  "main": "app.js",
+  "author": "Andrew Carreiro <andrew@headfirst.ca>",
+  "dependencies": {
+    "node-twitter-api": "^1.5.0",
+    "ansidown": "0.0.1"
+  }
+}

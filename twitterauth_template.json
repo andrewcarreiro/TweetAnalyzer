@@ -1,0 +1,11 @@
+{
+	"app" : {
+		"consumerKey" 		: "foo",
+		"consumerSecret" 	: "bar",
+		"callback"			: "http://localhost/"
+	},
+	"token" : {
+		"access" : "baz",
+		"secret" : "boz"
+	}
+}

@@ -1,0 +1,4 @@
+minecart/**/*.json
+*.DS_Store
+node_modules/*
+twitterauth.json
