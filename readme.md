@@ -7,3 +7,6 @@ You may run it by executing the command `node app.js`, followed by an action to 
 - **help** View this file.
 - **search** Execute a long-running scraper on a given search
 - **sockpuppet** Identify patterns in dummy account usage
+
+##Issues
+- scraper is bugged and cannot yet run continuously.
