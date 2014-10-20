@@ -39,16 +39,16 @@ exports.init = function(searchTerm, endOfLifeCallback) {
 	var token = twitterauth.token;
 
 	startTime = new Date();
-	var y = startTime.getFullYear();
-	var m = helpers.prefix0(startTime.getMonth());
-	var d = helpers.prefix0(startTime.getDate());
+	var Y = startTime.getFullYear();
+	var M = helpers.prefix0(startTime.getMonth());
+	var D = helpers.prefix0(startTime.getDate());
 	var h = helpers.prefix0(startTime.getHours());
 	var m = helpers.prefix0(startTime.getMinutes());
 	var s = helpers.prefix0(startTime.getSeconds());
 
 	var path = "./minecart/";
-	userFile =  y+"-"+m+"-"+d+"-"+h+"-"+m+"-"+s+"-users.json";
-	tweetFile =  y+"-"+m+"-"+d+"-"+h+"-"+m+"-"+s+"-tweets.json";
+	userFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-users.json";
+	tweetFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-tweets.json";
 
 	notificationMessage = notificationMessage.replace("{{TOPIC}}",searchTerm);
 
@@ -153,7 +153,9 @@ var parseData = function(data){
 */
 var parseDatum = function (datum) {
 	var user = datum.user;
-	datum.user = user.id;
-	fs.writeSync(tweetFile,JSON.stringify(datum)+",\n");
-	fs.writeSync(userFile,JSON.stringify(user)+",\n");
+	if(user.hasOwnProperty('id')){
+		datum.user = user.id;
+		fs.writeSync(tweetFile,JSON.stringify(datum)+",\n");
+		fs.writeSync(userFile,JSON.stringify(user)+",\n");
+	}
 }

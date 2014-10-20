@@ -1,0 +1,13 @@
+<% include ./partials/head.ejs %>
+<div id="data_collected">
+	<h2>Datasets</h2>
+	<div ng-controller="DatasetsController">
+		<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new Dataset</button>
+		<table class="table">
+			<tr ng-repeat="dataset in datasets" id="{{dataset.filename}}">
+				<td>{{dataset.label}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<% include ./partials/foot.ejs %>

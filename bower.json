@@ -1,0 +1,23 @@
+{
+  "name": "tweetanalyzer",
+  "version": "0.0.1",
+  "homepage": "https://github.com/andrewcarreiro/TweetAnalyzer",
+  "authors": [
+    "Andrew Carreiro <acarreiro@headfirst.ca>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "jquery": "~2.1.1",
+    "angular": "~1.3.0",
+    "angular-socket-io": "~0.6.0"
+  }
+}
