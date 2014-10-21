@@ -46,6 +46,26 @@ io.sockets.on('connection', function(socket) {
 	//			break;
 	//	}
 	//});
+
+	socket.on('twittersearch/start', function(data) {
+		twittersearch.init ( 
+			data.term, //term to search for
+			socket,
+			function (code) { //end of life actions
+				console.log('eol');
+				console.log(code);
+				//if(!code) { code = 0; }
+				//rl.close();
+				//process.exit(code);
+			}
+		);
+	});
+
+	socket.on('twittersearch/stop', function(data) {
+		twittersearch.end();
+	});
+
+
 });
 
 

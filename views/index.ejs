@@ -2,7 +2,25 @@
 <div id="data_collected">
 	<h2>Datasets</h2>
 	<div ng-controller="DatasetsController">
-		<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create new Dataset</button>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="dataset-addition">
+					<form class="form-inline">
+						<fieldset ng-disabled="dataset_watching">
+							<input type="text" class="form-control" ng-model="dataset_to_add" placeholder="Enter a search query"/>
+							<button type="button" class="btn btn-primary" ng-click="startDataCollection()"><span class="glyphicon glyphicon-plus"></span> Add a new dataset</button>
+						</fieldset>
+						<fieldset ng-show="dataset_watching">
+							<button type="button" class="btn btn-danger" ng-click="stopDataCollection()">Stop collecting data</button>
+							<span class="glyphicon glyphicon-cog spinning dataset-seeking"></span>
+							<span class="status">
+								{{status.count}} tweets found. {{status.time}} elapsed.
+							</span>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
 		<table class="table">
 			<tr ng-repeat="dataset in datasets" id="{{dataset.filename}}">
 				<td>{{dataset.label}}</td>

@@ -4,21 +4,21 @@ var twitterauth = JSON.parse(fs.readFileSync('./twitterauth.json'));
 var helpers = require('./helpers.js');
 
 
-var notificationMessage = 'Now scanning for tweets containing "{{TOPIC}}". Press enter to end.\n============================================\nResults\n============================================\nTweets found: {{FOUND}}\nTime Elapsed: {{TIME}}';
 var startTime = new Date();
 var tweetCount = 0;
 var userFile;
 var tweetFile;
 var first = true;
+var socket;
+var currentSearch;
 
 
 /*
-	exports.currentNotificationText
+	currentNotificationData
 	---------------------------------
-	Need it to be externally accesible. This replaces elements in notificationMessage for printing both here and in the main app's question
+	outputs all vars for search status
 */
-var currentNotificationText = function() {
-	var q = notificationMessage.replace("{{FOUND}}",tweetCount);
+var currentNotificationData = function() {
 	var timeElapsed = new Date() - startTime;
 	timeElapsed = Math.round(timeElapsed/1000);
 	var hours 	= Math.floor(timeElapsed / (60*60));
@@ -29,12 +29,16 @@ var currentNotificationText = function() {
 	minutes = helpers.prefix0(minutes);
 	seconds = helpers.prefix0(seconds);
 
-	q = q.replace("{{TIME}}",hours+":"+minutes+":"+seconds);
-	return q;
+	var returnobj = {
+		time  : hours+":"+minutes+":"+seconds,
+		count : tweetCount
+	}
+
+	return returnobj;
 }
 
-exports.init = function(searchTerm, endOfLifeCallback) {
-	
+exports.init = function(searchTerm, s, endOfLifeCallback) {
+	socket = s;
 	var twitter = new twitterAPI(twitterauth.app);
 	var token = twitterauth.token;
 
@@ -50,8 +54,6 @@ exports.init = function(searchTerm, endOfLifeCallback) {
 	userFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-users.json";
 	tweetFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-tweets.json";
 
-	notificationMessage = notificationMessage.replace("{{TOPIC}}",searchTerm);
-
 
 	userFile = fs.openSync(path+userFile, 'a');
 	tweetFile = fs.openSync(path+tweetFile, 'a');
@@ -60,7 +62,7 @@ exports.init = function(searchTerm, endOfLifeCallback) {
 	fs.writeSync(tweetFile,initString);
 
 
-	twitter.getStream(
+	currentSearch = twitter.getStream(
 		"filter", 
 		{
 			"track"	: searchTerm
@@ -74,6 +76,7 @@ exports.init = function(searchTerm, endOfLifeCallback) {
 				endOfLifeCallback(1);
 			} else {
 				//console.log(data);
+				console.log('new tweet');
 				tweetCount++;
 				parseData(data);
 				updateMessage();
@@ -87,9 +90,15 @@ exports.init = function(searchTerm, endOfLifeCallback) {
 		}
 	);
 
+	console.log(currentSearch);
+
 	setInterval( function() {
 		updateMessage();
 	},1000);
+}
+
+exports.end = function() {
+	currentSearch = null;
 }
 
 
@@ -112,7 +121,8 @@ exports.eol = function() {
 	Function to spit out the current status of the search
 */
 var updateMessage = function() {
-	process.stdout.moveCursor(-999999,0);
+	socket.emit('twittersearch/status', currentNotificationData());
+	/*process.stdout.moveCursor(-999999,0);
 	if (first) { 
 		first = false;
 	} else {
@@ -124,7 +134,7 @@ var updateMessage = function() {
 	}
 	
 	
-	process.stdout.write(currentNotificationText());
+	process.stdout.write(currentNotificationData());*/
 }
 
 
