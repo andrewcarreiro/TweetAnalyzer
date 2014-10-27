@@ -63,6 +63,7 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('twittersearch/stop', function(data) {
 		twittersearch.end();
+		filemanager.list(socket);
 	});
 
 

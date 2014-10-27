@@ -21,10 +21,22 @@
 				</div>
 			</div>
 		</div>
-		<table class="table">
-			<tr ng-repeat="dataset in datasets" id="{{dataset.filename}}">
-				<td>{{dataset.label}}</td>
-			</tr>
+		<table ng-repeat="query in datasets" class="table">
+			<thead>
+				<tr>
+					<th colspan="2">{{query[0].query}}</th>
+				</tr>
+				<tr>
+					<th>Date/time captured</th>
+					<th>Number of tweets</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="dataset in query">
+					<td>{{dataset.label}}</td>
+					<td>{{dataset.length}}</td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
 </div>

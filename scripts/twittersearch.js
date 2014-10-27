@@ -1,12 +1,19 @@
 var fs = require('fs');
-var twitterAPI = require('node-twitter-api');
 var twitterauth = JSON.parse(fs.readFileSync('./twitterauth.json'));
+var Twit = require('twit');
+var T = new Twit({
+	consumer_key:         twitterauth.consumerKey,
+	consumer_secret:      twitterauth.consumerSecret,
+	access_token:         twitterauth.access,
+	access_token_secret:  twitterauth.secret
+});
 var helpers = require('./helpers.js');
 
 
 var startTime = new Date();
 var tweetCount = 0;
 var userFile;
+var metaFile;
 var tweetFile;
 var first = true;
 var socket;
@@ -39,12 +46,10 @@ var currentNotificationData = function() {
 
 exports.init = function(searchTerm, s, endOfLifeCallback) {
 	socket = s;
-	var twitter = new twitterAPI(twitterauth.app);
-	var token = twitterauth.token;
 
 	startTime = new Date();
 	var Y = startTime.getFullYear();
-	var M = helpers.prefix0(startTime.getMonth());
+	var M = helpers.prefix0(startTime.getMonth()+1);
 	var D = helpers.prefix0(startTime.getDate());
 	var h = helpers.prefix0(startTime.getHours());
 	var m = helpers.prefix0(startTime.getMinutes());
@@ -53,6 +58,7 @@ exports.init = function(searchTerm, s, endOfLifeCallback) {
 	var path = "./minecart/";
 	userFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-users.json";
 	tweetFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-tweets.json";
+	metaFile =  Y+"-"+M+"-"+D+"-"+h+"-"+m+"-"+s+"-meta.json";
 
 
 	userFile = fs.openSync(path+userFile, 'a');
@@ -62,53 +68,33 @@ exports.init = function(searchTerm, s, endOfLifeCallback) {
 	fs.writeSync(tweetFile,initString);
 
 
-	currentSearch = twitter.getStream(
-		"filter", 
-		{
-			"track"	: searchTerm
-		},
-	  	token.access,
-	  	token.secret,
-		function(error, data, response) { //on data
-			if (error) {
-				console.error(error);
-				exports.eol();
-				endOfLifeCallback(1);
-			} else {
-				//console.log(data);
-				console.log('new tweet');
-				tweetCount++;
-				parseData(data);
-				updateMessage();
-			}
-		},
-		function(error) { //on error complete
-			console.error('On complete');
-			console.error(error);
-			exports.eol();
-			endOfLifeCallback(1);
-		}
-	);
+	//meta init
+	var metaInit = {
+		'query' : searchTerm
+	};
+	fs.writeFileSync(path+metaFile,JSON.stringify(metaInit));
 
-	console.log(currentSearch);
+	currentSearch = T.stream('statuses/filter', { track: searchTerm});
+	currentSearch.on('tweet', function (tweet) {
+		tweetCount++;
+		parseData(tweet);
+		updateMessage();
+	});
+	currentSearch.on('error', function(msg) {
+		console.log(msg);
+	});
 
 	setInterval( function() {
 		updateMessage();
 	},1000);
 }
 
+
+
+
+
 exports.end = function() {
-	currentSearch = null;
-}
-
-
-
-/*
-	eol
-	---------------------------------
-	End of life functions to finish up the JSON files.
-*/
-exports.eol = function() {
+	currentSearch.stop();
 	var endstring = "]";
 	fs.writeSync(userFile,endstring);
 	fs.writeSync(tweetFile,endstring);
@@ -122,19 +108,6 @@ exports.eol = function() {
 */
 var updateMessage = function() {
 	socket.emit('twittersearch/status', currentNotificationData());
-	/*process.stdout.moveCursor(-999999,0);
-	if (first) { 
-		first = false;
-	} else {
-		for(var i=0; i<5; i++){
-			process.stdout.clearLine();
-			process.stdout.moveCursor(0,-1);
-		}
-		process.stdout.clearLine();
-	}
-	
-	
-	process.stdout.write(currentNotificationData());*/
 }
 
 
@@ -165,7 +138,13 @@ var parseDatum = function (datum) {
 	var user = datum.user;
 	if(user.hasOwnProperty('id')){
 		datum.user = user.id;
-		fs.writeSync(tweetFile,JSON.stringify(datum)+",\n");
-		fs.writeSync(userFile,JSON.stringify(user)+",\n");
+		if(first){
+			var separator = "\n";
+			first = false;
+		}else{
+			var separator = ",\n";
+		}
+		fs.writeSync(tweetFile,separator+JSON.stringify(datum));
+		fs.writeSync(userFile, separator+JSON.stringify(user));
 	}
 }
