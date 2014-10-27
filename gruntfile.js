@@ -22,6 +22,7 @@ module.exports = function(grunt) {
 							'bower_components/bootstrap/dist/js/bootstrap.min.js',
 							'bower_components/angular/angular.js',
 							'bower_components/angular-socket-io/socket.js',
+							'bower_components/d3/d3.min.js',
 							'clientassets/scripts/*'
 						]
 					}

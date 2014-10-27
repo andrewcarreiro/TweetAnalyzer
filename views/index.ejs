@@ -24,17 +24,24 @@
 		<table ng-repeat="query in datasets" class="table">
 			<thead>
 				<tr>
-					<th colspan="2">{{query[0].query}}</th>
+					<th colspan="3">{{query[0].query}}</th>
 				</tr>
 				<tr>
 					<th>Date/time captured</th>
 					<th>Number of tweets</th>
+					<th>Run Report</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="dataset in query">
 					<td>{{dataset.label}}</td>
 					<td>{{dataset.length}}</td>
+					<td>
+						<select ng-model="dataset.reportToRun">
+							<option value="sockpuppet">User account creation date</option>
+						</select>
+						<button type="button" ng-click="runReport(dataset,dataset.reportToRun)" class="btn btn-primary btn-xs">Run report</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>

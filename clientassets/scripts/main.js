@@ -10,6 +10,7 @@ angular.module('tweetanalyzer', [
 	.controller('DatasetsController', function ($scope, socketComm) {
 		socketComm.forward('filemanager/get',$scope);
 		socketComm.forward('twittersearch/status',$scope);
+		socketComm.forward('report',$scope);
 
 		$scope.datasets = [];
 
@@ -39,5 +40,18 @@ angular.module('tweetanalyzer', [
 			$scope.dataset_watching = false;
 			socketComm.emit('twittersearch/stop', {});
 		}
+
+		//run report
+		$scope.runReport = function(dataset,report) {
+			socketComm.emit('report', {
+				"dataset" : dataset,
+				"report"  : report
+			});
+		}
+
+		//managing reports
+		$scope.$on('socket:report', function(ev,data){
+			console.log(data);
+		});
 
 	});

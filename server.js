@@ -66,6 +66,14 @@ io.sockets.on('connection', function(socket) {
 		filemanager.list(socket);
 	});
 
+	socket.on('report', function(data) {
+		switch(data.report) {
+			case 'sockpuppet' : 
+				sockpuppet.init(socket,data.dataset);
+				break;
+		}
+	});
+
 
 });
 
