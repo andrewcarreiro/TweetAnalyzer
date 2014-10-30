@@ -23,6 +23,7 @@ module.exports = function(grunt) {
 							'bower_components/angular/angular.js',
 							'bower_components/angular-socket-io/socket.js',
 							'bower_components/d3/d3.min.js',
+							'bower_components/angular-charts/dist/angular-charts.min.js',
 							'clientassets/scripts/*'
 						]
 					}
@@ -35,7 +36,13 @@ module.exports = function(grunt) {
 				dest : '.public/style.css'
 			},
 			js : {
-				src : ['.public/jstemp/jquery.min.js', '.public/jstemp/*', '.public/jstemp/main.js'],
+				src : [
+					'.public/jstemp/jquery.min.js', 
+					'.public/jstemp/angular.js',
+					'.public/jstemp/d3.min.js',
+					'.public/jstemp/*', 
+					'.public/jstemp/main.js'
+				],
 				dest : '.public/head.js'
 			}
 		},

@@ -1,0 +1,51 @@
+<div >
+<!--ng-show="chart=='sockpuppet'"-->
+	<div class="row">
+		<div class="col-sm-6 col-push-6">
+			<div 
+				style="height:500px;width:500px;"
+				data-ac-chart="'pie'" 
+				data-ac-data="report.chart"
+				data-ac-config="{'title':'sockpuppet report'}"
+			></div>
+		</div>
+		<div class="col-sm-6 col-pull-6">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Ages of accounts</th>
+						<th>Count</th>
+						<th>Percent</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>Less than Seven days</td>
+					<td>{{report.data.seven.count}}</td>
+					<th>{{report.data.seven.percent}}%</td>
+				</tr>
+				<tr>
+					<td>Less than Fifteen days</td>
+					<td>{{report.data.fifteen.count}}</td>
+					<th>{{report.data.fifteen.percent}}%</td>
+				</tr>
+				<tr>
+					<td>Less than Thirty days</td>
+					<td>{{report.data.thirty.count}}</td>
+					<th>{{report.data.thirty.percent}}%</td>
+				</tr>
+				<tr>
+					<td>Less than Sixty days</td>
+					<td>{{report.data.sixty.count}}</td>
+					<th>{{report.data.sixty.percent}}%</td>
+				</tr>
+				<tr>
+					<td>Greater than or equal to Sixty days</td>
+					<td>{{report.data.greater.count}}</td>
+					<th>{{report.data.greater.percent}}%</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

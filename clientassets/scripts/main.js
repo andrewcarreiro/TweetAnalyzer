@@ -2,7 +2,8 @@ var socket = io.connect('http://localhost');
 
 
 angular.module('tweetanalyzer', [
-		'btford.socket-io'
+		'btford.socket-io',
+		'angularCharts'
 	])
 	.factory('socketComm', function (socketFactory) {
 		return socketFactory();
@@ -13,6 +14,8 @@ angular.module('tweetanalyzer', [
 		socketComm.forward('report',$scope);
 
 		$scope.datasets = [];
+		$scope.chart = false;
+		$scope.report = false;
 
 
 		$scope.$on('socket:filemanager/get', function (ev,data) {
@@ -51,7 +54,8 @@ angular.module('tweetanalyzer', [
 
 		//managing reports
 		$scope.$on('socket:report', function(ev,data){
-			console.log(data);
+			//console.log(data);
+			$scope.chart = data.type;
+			$scope.report = data;
 		});
-
 	});
